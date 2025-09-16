@@ -1,22 +1,23 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { BuyerForm } from '@/components/buyers/buyer-form';
-import { getBuyerById } from '@/lib/db/queries';
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { BuyerForm } from "@/components/buyers/buyer-form";
+import { getBuyerById } from "@/lib/db/queries";
 
 interface BuyerPageProps {
   params: {
     id: string;
+    [key: string]: string; // make compatible with Next.js PageProps
   };
 }
 
 export default async function BuyerPage({ params }: BuyerPageProps) {
   const buyer = await getBuyerById(params.id);
-  
+
   if (!buyer) {
     notFound();
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -34,7 +35,7 @@ export default async function BuyerPage({ params }: BuyerPageProps) {
           </form>
         </div>
       </div>
-      
+
       <div className="rounded-lg border p-6">
         <BuyerForm initialData={buyer} buyerId={buyer.id} />
       </div>
