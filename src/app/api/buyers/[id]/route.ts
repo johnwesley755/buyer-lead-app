@@ -3,19 +3,18 @@ import { getSession } from "@/lib/auth/session";
 import { getBuyerById, updateBuyer, deleteBuyer } from "@/lib/db/queries";
 import { buyerSchema } from "@/lib/validations/buyer";
 
-interface Params {
-  id: string;
-}
-
 // GET buyer by ID
-export async function GET(req: NextRequest, context: { params: Params }) {
-  const { params } = context;
+export async function GET(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { id } = context.params;
 
   const user = await getSession();
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const buyer = await getBuyerById(params.id);
+  const buyer = await getBuyerById(id);
   if (!buyer)
     return NextResponse.json({ error: "Buyer not found" }, { status: 404 });
 
@@ -23,28 +22,30 @@ export async function GET(req: NextRequest, context: { params: Params }) {
 }
 
 // PUT update buyer
-export async function PUT(req: NextRequest, context: { params: Params }) {
-  const { params } = context;
+export async function PUT(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { id } = context.params;
 
   const user = await getSession();
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const buyer = await getBuyerById(params.id);
+  const buyer = await getBuyerById(id);
   if (!buyer)
     return NextResponse.json({ error: "Buyer not found" }, { status: 404 });
 
   const body = await req.json();
   const result = buyerSchema.safeParse(body);
 
-  if (!result.success) {
+  if (!result.success)
     return NextResponse.json(
       { error: "Invalid buyer data", details: result.error.format() },
       { status: 400 }
     );
-  }
 
-  const updatedBuyer = await updateBuyer(params.id, {
+  const updatedBuyer = await updateBuyer(id, {
     ...result.data,
     userId: user.id,
   });
@@ -52,17 +53,20 @@ export async function PUT(req: NextRequest, context: { params: Params }) {
 }
 
 // DELETE buyer
-export async function DELETE(req: NextRequest, context: { params: Params }) {
-  const { params } = context;
+export async function DELETE(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { id } = context.params;
 
   const user = await getSession();
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const buyer = await getBuyerById(params.id);
+  const buyer = await getBuyerById(id);
   if (!buyer)
     return NextResponse.json({ error: "Buyer not found" }, { status: 404 });
 
-  await deleteBuyer(params.id, user.id);
+  await deleteBuyer(id, user.id);
   return NextResponse.json({ success: true });
 }
