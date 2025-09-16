@@ -22,7 +22,19 @@ export async function POST(req: NextRequest) {
 
     // Parse CSV file
     const parseResult = await parseCsvFile(file);
-    const { buyers, errors } = parseResult as any;
+    const { buyers, errors } = parseResult as { 
+      buyers: Array<{
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone: string;
+        address: string;
+        city: string;
+        state: string;
+        zipCode: string;
+      }>;
+      errors: string[];
+    };
 
     if (errors && errors.length > 0) {
       return NextResponse.json(

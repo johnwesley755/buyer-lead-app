@@ -19,7 +19,7 @@ export function BuyerStatusBadge({ status }: BuyerStatusBadgeProps) {
   const config = statusConfig[status] || { label: status, variant: 'default' }
   
   return (
-    <Badge variant={config.variant}>
+    <Badge variant={config.variant as "default" | "destructive" | "outline" | "secondary"}>
       {config.label}
     </Badge>
   )

@@ -9,7 +9,7 @@ export function ImportDialog() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ inserted: number; invalid?: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   function downloadTemplate() {
@@ -101,7 +101,7 @@ export function ImportDialog() {
               <div className="mt-2 text-sm text-green-700">
                 <p>
                   Successfully imported {result.inserted} buyers.
-                  {result.invalid > 0 && ` ${result.invalid} buyers were invalid and skipped.`}
+                  {result.invalid && result.invalid > 0 && ` ${result.invalid} buyers were invalid and skipped.`}
                 </p>
               </div>
             </div>

@@ -1,13 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { COOKIE_NAME } from '@/lib/auth/config';
+import { NextRequest, NextResponse } from "next/server";
+import { COOKIE_NAME } from "@/lib/auth/config";
 
 export async function POST(req: NextRequest) {
-  const cookieStore = cookies();
-  
-  // Delete the session cookie
-  cookieStore.delete(COOKIE_NAME);
-  
-  // Redirect to login page
-  return NextResponse.redirect(new URL('/auth/login', req.url));
+  // Create a response
+  const res = NextResponse.redirect(new URL("/auth/login", req.url));
+
+  // Delete the cookie by setting maxAge: 0
+  res.cookies.set({
+    name: COOKIE_NAME,
+    value: "",
+    maxAge: 0, // expire immediately
+    path: "/",
+  });
+
+  return res;
 }

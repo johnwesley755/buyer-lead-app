@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { buyerSchema, type BuyerFormValues } from '@/lib/validations/buyer';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { buyerSchema, type BuyerFormValues } from "@/lib/validations/buyer";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 interface BuyerFormProps {
   initialData?: Partial<BuyerFormValues>;
@@ -22,15 +22,15 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
   const form = useForm<BuyerFormValues>({
     resolver: zodResolver(buyerSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      status: 'new',
-      priority: 'medium',
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      status: "new",
+      priority: "medium",
       budget: null,
-      location: '',
-      notes: '',
+      location: "",
+      notes: "",
       tags: [],
       assignedTo: null,
       ...initialData,
@@ -39,28 +39,28 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
 
   async function onSubmit(data: BuyerFormValues) {
     setIsSubmitting(true);
-    
+
     try {
-      const url = isEditing ? `/api/buyers/${buyerId}` : '/api/buyers';
-      const method = isEditing ? 'PUT' : 'POST';
-      
+      const url = isEditing ? `/api/buyers/${buyerId}` : "/api/buyers";
+      const method = isEditing ? "PUT" : "POST";
+
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to save buyer');
+        throw new Error(error.error || "Failed to save buyer");
       }
-      
-      router.push('/buyers');
+
+      router.push("/buyers");
       router.refresh();
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
       // Handle error state
     } finally {
       setIsSubmitting(false);
@@ -76,7 +76,7 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
           </label>
           <Input
             id="firstName"
-            {...form.register('firstName')}
+            {...form.register("firstName")}
             disabled={isSubmitting}
           />
           {form.formState.errors.firstName && (
@@ -85,14 +85,14 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <label htmlFor="lastName" className="text-sm font-medium">
             Last Name
           </label>
           <Input
             id="lastName"
-            {...form.register('lastName')}
+            {...form.register("lastName")}
             disabled={isSubmitting}
           />
           {form.formState.errors.lastName && (
@@ -101,7 +101,7 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-medium">
             Email
@@ -109,7 +109,7 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
           <Input
             id="email"
             type="email"
-            {...form.register('email')}
+            {...form.register("email")}
             disabled={isSubmitting}
           />
           {form.formState.errors.email && (
@@ -118,14 +118,14 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <label htmlFor="phone" className="text-sm font-medium">
             Phone
           </label>
           <Input
             id="phone"
-            {...form.register('phone')}
+            {...form.register("phone")}
             disabled={isSubmitting}
           />
           {form.formState.errors.phone && (
@@ -134,14 +134,14 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <label htmlFor="status" className="text-sm font-medium">
             Status
           </label>
           <select
             id="status"
-            {...form.register('status')}
+            {...form.register("status")}
             disabled={isSubmitting}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
@@ -158,14 +158,14 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <label htmlFor="priority" className="text-sm font-medium">
             Priority
           </label>
           <select
             id="priority"
-            {...form.register('priority')}
+            {...form.register("priority")}
             disabled={isSubmitting}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
@@ -179,7 +179,7 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <label htmlFor="budget" className="text-sm font-medium">
             Budget
@@ -187,7 +187,7 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
           <Input
             id="budget"
             type="number"
-            {...form.register('budget', { valueAsNumber: true })}
+            {...form.register("budget", { valueAsNumber: true })}
             disabled={isSubmitting}
           />
           {form.formState.errors.budget && (
@@ -196,14 +196,14 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
             </p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <label htmlFor="location" className="text-sm font-medium">
             Location
           </label>
           <Input
             id="location"
-            {...form.register('location')}
+            {...form.register("location")}
             disabled={isSubmitting}
           />
           {form.formState.errors.location && (
@@ -213,14 +213,14 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
           )}
         </div>
       </div>
-      
+
       <div className="space-y-2">
         <label htmlFor="notes" className="text-sm font-medium">
           Notes
         </label>
         <Textarea
           id="notes"
-          {...form.register('notes')}
+          {...form.register("notes")}
           disabled={isSubmitting}
           rows={4}
         />
@@ -230,7 +230,7 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
           </p>
         )}
       </div>
-      
+
       <div className="flex justify-end gap-4">
         <Button
           type="button"
@@ -241,7 +241,11 @@ export function BuyerForm({ initialData, buyerId }: BuyerFormProps) {
           Cancel
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : isEditing ? 'Update Buyer' : 'Create Buyer'}
+          {isSubmitting
+            ? "Saving..."
+            : isEditing
+            ? "Update Buyer"
+            : "Create Buyer"}
         </Button>
       </div>
     </form>

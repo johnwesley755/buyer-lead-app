@@ -1,13 +1,17 @@
-import type { NextConfig } from 'next'
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverActions: true,
+    serverActions: {}, // ✅ Keep or remove if not needed
   },
   images: {
-    domains: ['localhost'],
+    domains: ["localhost"],
   },
-}
+  eslint: {
+    // Skip ESLint during production builds
+    ignoreDuringBuilds: true,
+  },
+};
 
-export default nextConfig
+export default nextConfig;

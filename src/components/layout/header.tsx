@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
-  user?: any; // Make user optional
+  user?: { name?: string; email?: string }; // Make user optional
 }
 
 export function Header({ user }: HeaderProps) {

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { verifyTokenSchema } from "@/lib/validations/auth";
 import {
   getVerificationToken,
@@ -13,7 +12,6 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const token = searchParams.get("token");
 
-    // Validate token format
     const result = verifyTokenSchema.safeParse({ token });
 
     if (!result.success) {
@@ -23,7 +21,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Verify token exists in database
     const verificationToken = await getVerificationToken(token!);
 
     if (!verificationToken) {
@@ -33,20 +30,17 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Check if token is expired
     if (new Date(verificationToken.expires) < new Date()) {
       await deleteVerificationToken(token!);
       return NextResponse.json({ error: "Token has expired" }, { status: 400 });
     }
 
-    // Get user
     const user = await getUserByEmail(verificationToken.email);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Create session
     const session = {
       email: user.email,
       userId: user.id,
@@ -54,9 +48,13 @@ export async function GET(req: NextRequest) {
       expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
     };
 
-    // Set cookie
-    const cookieStore = cookies();
-    cookieStore.set({
+    // ✅ Use NextResponse to set cookie
+    const res = NextResponse.json({
+      success: true,
+      redirect: "/buyers",
+    });
+
+    res.cookies.set({
       name: COOKIE_NAME,
       value: Buffer.from(JSON.stringify(session)).toString("base64"),
       httpOnly: true,
@@ -66,13 +64,9 @@ export async function GET(req: NextRequest) {
       sameSite: "lax",
     });
 
-    // Delete token after successful verification
     await deleteVerificationToken(token!);
 
-    return NextResponse.json({
-      success: true,
-      redirect: "/buyers", // Redirect to buyers page after login
-    });
+    return res;
   } catch (error) {
     console.error("Verification error:", error);
     return NextResponse.json(
