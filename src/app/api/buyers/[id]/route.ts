@@ -4,11 +4,8 @@ import { getBuyerById, updateBuyer, deleteBuyer } from "@/lib/db/queries";
 import { buyerSchema } from "@/lib/validations/buyer";
 
 // GET buyer by ID
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function GET(req: NextRequest, context: any) {
+  const id = context.params.id;
 
   const user = await getSession();
   if (!user)
@@ -22,11 +19,8 @@ export async function GET(
 }
 
 // PUT update buyer
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function PUT(req: NextRequest, context: any) {
+  const id = context.params.id;
 
   const user = await getSession();
   if (!user)
@@ -53,11 +47,8 @@ export async function PUT(
 }
 
 // DELETE buyer
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function DELETE(req: NextRequest, context: any) {
+  const id = context.params.id;
 
   const user = await getSession();
   if (!user)
